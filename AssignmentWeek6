@@ -1,0 +1,104 @@
+Task One
+
+import pandas as pd
+from sklearn.datasets import load_iris
+
+
+# Load the Iris dataset
+iris = load_iris()
+
+
+# Create a pandas DataFrame
+data = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+data['target'] = iris.target  # Add the target variable as a column
+
+
+# Display the first few rows
+print(data.head())
+
+
+# Explore data structure and missing values
+print(data.info())  # Shows data types and non-null counts
+print(data.isnull().sum())  # Counts missing values per column
+
+
+# Clean the dataset (example: filling missing values with the mean)
+# (Note: The Iris dataset typically doesn't have missing values,
+# but this is here for demonstration purposes)
+for column in data.select_dtypes(include=['number']):
+    data[column] = data[column].fillna(data[column].mean())
+# Alternatively, you could drop rows with missing values:
+# data.dropna(inplace=True)
+
+
+Task 2
+
+# Basic statistics
+print(data.describe())
+
+# Groupings and mean computation (example: average petal length per species)
+grouped_data = data.groupby('target')['petal length (cm)'].mean()
+print(grouped_data)
+
+# Identify patterns and findings 
+print("\nAnalysis and Interpretation:")
+print("----------------------------")
+
+# Basic statistics analysis
+print("Basic Statistics:")
+print("- The average sepal length is:", data['sepal length (cm)'].mean())
+print("- The median petal width is:", data['petal width (cm)'].median())
+print("- The standard deviation of sepal length is:", data['sepal length (cm)'].std())
+# Add more interpretations as needed
+
+# Grouped data analysis
+print("\nGrouped Data Analysis:")
+print("- Species 0 (Setosa) has an average petal length of:", grouped_data[0])
+print("- Species 1 (Versicolor) has an average petal length of:", grouped_data[1])
+print("- Species 2 (Virginica) has an average petal length of:", grouped_data[2])
+print("- This suggests that petal length is a distinguishing feature between species.")
+# Add more interpretations based on grouped data
+
+# Overall patterns and findings
+print("\nOverall Patterns and Findings:")
+print("- There seems to be a correlation between sepal length and petal length.")  # Example observation
+print("- Species can potentially be classified based on their petal and sepal characteristics.")  # Example finding
+# Add more observations and findings based on your analysis
+
+
+Task 3
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Line chart (example: sepal length over index as a proxy for time)
+plt.figure(figsize=(10, 6))
+sns.lineplot(x=data.index, y=data['sepal length (cm)'])
+plt.title('Sepal Length Trend')
+plt.xlabel('Index (Proxy for Time)')
+plt.ylabel('Sepal Length (cm)')
+plt.show()
+
+# Bar chart (example: average petal length per species)
+plt.figure(figsize=(8, 5))
+sns.barplot(x='target', y='petal length (cm)', data=data)
+plt.title('Average Petal Length per Species')
+plt.xlabel('Species (0: Setosa, 1: Versicolor, 2: Virginica)')
+plt.ylabel('Average Petal Length (cm)')
+plt.show()
+
+# Histogram (example: distribution of sepal width)
+plt.figure(figsize=(8, 5))
+sns.histplot(data['sepal width (cm)'], bins=10)
+plt.title('Distribution of Sepal Width')
+plt.xlabel('Sepal Width (cm)')
+plt.ylabel('Frequency')
+plt.show()
+
+# Scatter plot (example: sepal length vs. petal length)
+plt.figure(figsize=(8, 5))
+sns.scatterplot(x='sepal length (cm)', y='petal length (cm)', data=data, hue='target')
+plt.title('Sepal Length vs. Petal Length')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Petal Length (cm)')
+plt.show()
